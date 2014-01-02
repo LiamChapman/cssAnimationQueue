@@ -1,5 +1,16 @@
 {
-  "name": "cssAnimationQueue",
+  "name": "css-animation-queue",
+  "version": "1.0.0",
+  "homepage": "https://github.com/LiamChapman/cssAnimationQueue",
+  "authors": [
+    "Liam Chapman"
+  ],
+  "description": "Small JS library for queuing CSS3 animations",
   "main": "./css.animation.queue.js",
-  "version": "1.0.0"
+  "keywords": [
+    "css3",
+    "queuing",
+    "animations"
+  ],
+  "license": "MIT"
 }
