@@ -1,0 +1,5 @@
+{
+  "name": "cssAnimationQueue",
+  "main": "./css.animation.queue.js",
+  "version": "1.0.0"
+}

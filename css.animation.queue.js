@@ -1,8 +1,8 @@
 /**
- * @name Animation Queue
+ * @name CSS Animation Queue
  * @author Liam Chapman
  * @version 1.0.0
-**/
+ */
 ;(function (window) {
 
 	'use strict';
@@ -18,12 +18,12 @@
 		dataAttr: 'ani',
 		animation: 'fadeInUp',				
 		delay: 0,
-		animationEnd: false,
+		animationEnd: false, // boolean not added yet
 		callback: false // if you want to use a callback it will be used on each animation, better to specify animation with an attribute.
 	}
 	
 	/**
-	 * Initialise animationQueue
+	 * Initialise cssAnimationQueue
 	 */
 	function init (settings) {
 		// update defaults with any custom options sent through
@@ -110,7 +110,8 @@
 			 var elements = document.find('.'+options.selector);
 			 for (var e in elements) {
 			 	if (typeof elements[e] == 'object') {				 	
-				 	if (options.hidden) {
+			 		var dont_hide = elements[e].data('dont-hide');
+				 	if (options.hidden && !dont_hide) {
 					 	if (options.hidden == 'class')
 					 		elements[e].classList.add(options.hiddenClass);
 					 	else
@@ -139,14 +140,17 @@
 				var delay		= elements[e].data('delay');
 				var sequence 	= elements[e].data('sequence');
 				var callback 	= elements[e].data('callback');
+				var dont_queue  = elements[e].data('dont-queue');
 				// counter check
-				if (sequence) {
-					counter = sequence;
-				} else {
-					++counter;
+				if (!dont_queue) {
+					if (sequence) {
+						counter = sequence;
+					} else {
+						++counter;
+					}
+					// store in new array for processing
+					queue[counter] = { e: elements[e], a: animation, d: delay, c: callback };				
 				}
-				// store in new array for processing
-				queue[counter] = { e: elements[e], a: animation, d: delay, c: callback };				
 			}
 		}	
 		// apply wait timeout if set and > 0
@@ -184,7 +188,7 @@
 			}, x.d ? x.d : options.delay); // pass through delay
 		}
 	}
-	
+
 	/**
 	 * Shim for RequestAnimationFrame
 	 */
@@ -197,17 +201,17 @@
 	/**
 	 * Global Var for returning public methods for animationQueue
 	 */	
-	var animationQueue = {
+	var cssAnimationQueue = {
 		init : init
 	};
 	
 	// transport
 	if ( typeof define === 'function' && define.amd ) {
 		// AMD
-		define( animationQueue );
+		define( cssAnimationQueue );
 	} else {
 		// browser global
-		window.animationQueue = animationQueue;
+		window.cssAnimationQueue = cssAnimationQueue;
 	}
 
 })(window);
