@@ -82,7 +82,7 @@ Initalisation with custom settings
 	- You can pass through a string name of a custom function. It will be fired each time of every animation though. So its better to set a specific one on an element
 
 
-### Compatability
+### Compatibility
 
 I've used some of the latest JS methods. So this won't be compatable with older versions of IE. But lets face it, if you want CSS3 animations. You need IE10+. This should work well on the latest FireFox and Webkit Browsers (Chrome & Safari). I might add some additional functionality for it to add some basic effects for older browsers later.
 
