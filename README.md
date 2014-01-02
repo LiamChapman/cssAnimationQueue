@@ -84,6 +84,6 @@ Initalisation with custom settings
 
 ### Compatibility
 
-I've used some of the latest JS methods. So this won't be compatable with older versions of IE. But lets face it, if you want CSS3 animations. You need IE10+. This should work well on the latest FireFox and Webkit Browsers (Chrome & Safari). I might add some additional functionality for it to add some basic effects for older browsers later.
+I've used some of the latest JS methods. So this won't be compatable with older versions of IE. But lets face it, if you want CSS3 animations. You need IE10+. This should work well on the latest FireFox and Webkit Browsers (Chrome & Safari). I might include some additional functionality for it in the future to add some basic effects for older browsers.
 
 I recommend using [classie](https://github.com/desandro/classie) for a crossbrowser classList replacement. I hope to make a condition to detect if set when I get a little extra time.
