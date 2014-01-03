@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+	<head>
+		<title>CSS Animation Queue</title>
+		<link rel="stylesheet" href="vendor/animate.min.css">
+		<style>
+			#foo {
+				width: 100px;
+				height: 100px;
+				background: red;
+			}
+			#bar {
+				width: 100px;
+				height: 100px;
+				background: blue;
+			}
+			#test {
+				width: 400px;
+				height: 200px;
+				background: orange;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div id="foo" class="animated" data-ani-animation="fadeInUp" data-ani-sequence="1" ></div>
+			<div id="bar" class="animated" data-ani-animation="fadeInRight" data-ani-delay="1000" data-ani-sequence="2" data-ani-dont-hide="true"></div>
+			<div id="test" class="animated" data-ani-animation="fadeInDown" data-ani-dont-queue="true"></div>
+		</div>
+		<script src="css.animation.queue.js"></script>
+		<script>		
+			// intialise animationQueue
+			cssAnimationQueue.init();			
+		</script>
+	</body>
+</html>

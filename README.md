@@ -11,7 +11,7 @@ Feel free to fork it, make pull requests and try and improve it :)
 
 Firstly, include the script on your page! Then by using data attributes you can set your custom parameters. A basic example is below, with all available options:
 
-	<div class="animated" data-ani-animation="fadeInUp" data-ani-delay="1000" data-ani-sequence="1" data-ani-callback="test" data-ani-dont-hide></div>
+	<div class="animated" data-ani-animation="fadeInUp" data-ani-delay="1000" data-ani-sequence="1" data-ani-callback="test" data-ani-dont-hide="true" dont-ani-dont-queue="true"></div>
 
 So as you can see you can set several options. The most important thing is setting a class for the script to find what elements to animate. 
 
@@ -25,7 +25,7 @@ So as you can see you can set several options. The most important thing is setti
 	- name of a function you want to be used on animation completition.
 * dont-hide
 	- optional parameter to make sure it doesn't get hidden if hidden set true
-* dont-queue (*not in the example above*)
+* dont-queue
 	- sometimes you might have a css animation that you don't want to be queued.
 
 The -ani- part is a custom addition to target only elements you want animated. If you don't like the -ani- part you can set your own custom selector. Instructions can be found below. Also, all parameters are optional so only write what you need and it will use the defaults you set.
