@@ -26,12 +26,14 @@
 	 * Initialise cssAnimationQueue
 	 */
 	function init (settings) {
-		// update defaults with any custom options sent through
-		options = options.merge(settings);
-		// hide elements if default set to true
-		hideElements();
-		// begin animation queue
-		queue();
+		if ('classList' in document.documentElement) {
+			// update defaults with any custom options sent through
+			options = options.merge(settings);
+			// hide elements if default set to true
+			hideElements();
+			// begin animation queue
+			queue();
+		}
 	}
 	
 	/**
