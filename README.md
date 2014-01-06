@@ -11,7 +11,7 @@ Feel free to fork it, make pull requests and try and improve it :)
 
 Firstly, include the script on your page! Then by using data attributes you can set your custom parameters. A basic example is below, with all available options:
 
-	<div class="animated" data-ani-animation="fadeInUp" data-ani-delay="1000" data-ani-sequence="1" data-ani-callback="test" data-ani-dont-hide="true" dont-ani-dont-queue="true"></div>
+	<div class="animated" data-ani-animation="fadeInUp" data-ani-delay="1000" data-ani-sequence="1" data-ani-before="test" data-ani-after="test" data-ani-dont-hide="true" dont-ani-dont-queue="true"></div>
 
 So as you can see you can set several options. The most important thing is setting a class for the script to find what elements to animate. 
 
@@ -21,8 +21,10 @@ So as you can see you can set several options. The most important thing is setti
 	- delay before animation starts
 * sequence 
 	- order you want it to play
-* callback
-	- name of a function you want to be used on animation completition.
+* before
+	- name of a function you want to be used before animation.
+* after
+	- name of a function you want to be used after animation completition.
 * dont-hide
 	- optional parameter to make sure it doesn't get hidden if hidden set true
 * dont-queue
@@ -59,7 +61,9 @@ Initalisation with custom settings
 		animation: 'fadeInUp',
 		delay: 0,
 		animationEnd: false,
-		callback: false
+		before: false,
+		after: false,
+		loop: false
 	});
 
 * wait (*Default: 0*)
@@ -78,8 +82,12 @@ Initalisation with custom settings
 	- You can set a global delay for each element
 * animationEnd (*Default: false*)
 	- Not used yet, but the intention is to make it so you can override the animation end setting to allow multiple animations at once.
-* callback (*Default: false*)
+* before (*Default: false*)
 	- You can pass through a string name of a custom function. It will be fired each time of every animation though. So its better to set a specific one on an element
+* after (*Default: false*)
+	- You can pass through a string name of a custom function. It will be fired each time of every animation though. So its better to set a specific one on an element
+* loop (*Default: false*)
+	- Setting this to true will loop the animation queue
 
 
 ### Compatibility

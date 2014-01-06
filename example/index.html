@@ -23,14 +23,18 @@
 	</head>
 	<body>
 		<div id="wrapper">
-			<div id="foo" class="animated" data-ani-animation="fadeInUp" data-ani-sequence="1" ></div>
+			<div id="foo" class="animated" data-ani-animation="fadeInUp" data-ani-before="before" data-ani-after="after" data-ani-sequence="1" ></div>
 			<div id="bar" class="animated" data-ani-animation="fadeInRight" data-ani-delay="1000" data-ani-sequence="2" data-ani-dont-hide="true"></div>
 			<div id="test" class="animated" data-ani-animation="fadeInDown" data-ani-dont-queue="true"></div>
 		</div>
 		<script src="../css.animation.queue.js"></script>
 		<script>		
 			// intialise animationQueue
-			cssAnimationQueue.init();			
+			cssAnimationQueue.init();	
+			
+			function before () { alert('this is before') }
+			function after () { alert('this is after') }
+			
 		</script>
 	</body>
 </html>

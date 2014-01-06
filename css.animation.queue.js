@@ -19,9 +19,14 @@
 		animation: 'fadeInUp',				
 		delay: 0,
 		animationEnd: false, // boolean not added yet
-		callback: false // if you want to use a callback it will be used on each animation, better to specify animation with an attribute.
+		before: false, // if you want to use a callback it will be used on each animation, better to specify animation with an attribute.
+		after: false, // if you want to use a callback it will be used on each animation, better to specify animation with an attribute.
+		loop: false
 	}
 	
+	// simple regex for commas for multple animations etc.
+	var commaCheck = new RegExp(",");
+		
 	/**
 	 * Initialise cssAnimationQueue
 	 */
@@ -84,6 +89,7 @@
 	 * Shorthand for binding events
 	 */	
 	Element.prototype.on = function (evnt, func) {
+		// for looping / binding array of events to the same object
 		if (typeof evnt === 'object') {
 			for (var e in evnt) {
 				if (this.addEventListener)  // W3C DOM
@@ -94,6 +100,7 @@
 				}
 			}
 		} else {
+			// apply one event.
 			if (this.addEventListener)  // W3C DOM
 			    this.addEventListener(evnt, func, false);
 			else if (this.attachEvent) { // IE DOM
@@ -133,7 +140,7 @@
 		// default counter
 		var counter = 0;
 		// empty queue array
-		var queue = [];
+		var queue = [];		
 		// loop elements
 		for (var e in elements) {
 			// get element data settings			
@@ -141,7 +148,8 @@
 				var animation 	= elements[e].data('animation');
 				var delay		= elements[e].data('delay');
 				var sequence 	= elements[e].data('sequence');
-				var callback 	= elements[e].data('callback');
+				var before 		= elements[e].data('before');
+				var after 		= elements[e].data('after');
 				var dont_queue  = elements[e].data('dont-queue');
 				// counter check
 				if (!dont_queue) {
@@ -151,7 +159,13 @@
 						++counter;
 					}
 					// store in new array for processing
-					queue[counter] = { e: elements[e], a: animation, d: delay, c: callback };				
+					queue[counter] = { 						 
+						a:  animation, 
+						af: after,
+						b:  before,
+						d:  delay, 
+						e:  elements[e]
+					};				
 				}
 			}
 		}	
@@ -168,25 +182,44 @@
 	 function loopQueue (queue, counter) {	
 	 	// shorthand for element
 	 	var x = queue[counter];
-	 	if (typeof(x) == 'object') {
+	 	if (typeof x == 'object') {
 		 	// create timeout and loop
 			setTimeout(function () {
-				// requestAnimFrame
-				requestAnimFrame(loopQueue);
+				// requestAnimFrame for better performance
+				requestAnimFrame(loopQueue);				
+				// check if we have a before callback				
+				if (x.b && typeof window[x.b] === 'function') {
+					window[x.b]();
+				} else {
+					if (options.b && window[options.b] === 'function')
+						window[options.b]();
+				}		
 				// add class to element
-				x.e.classList.add(x.a ? x.a : options.animationIn);			
-				// do rest when animation has ended
-				x.e.on(['webkitAnimationEnd', 'oanimationend', 'msAnimationEnd', 'animationend'], function () {
-					// check if we have callback				
-					if (x.c && typeof window[x.c] === 'function') {
-						window[x.c]();
+				x.e.classList.add(x.a ? x.a : options.animationIn);	
+				// do rest when animation has ended check if animationEnd set
+				if (!options.animationEnd) {
+					x.e.on(['webkitAnimationEnd', 'oanimationend', 'msAnimationEnd', 'animationend'], function () {
+						// check if we have a after callback				
+						if (x.af && typeof window[x.af] === 'function') {
+							window[x.af]();
+						} else {
+							if (options.after && window[options.after] === 'function')
+								window[options.after]();
+						}
+						// loop and do next animation
+						loopQueue(queue, ++counter);
+					});
+				} else {
+					// check if we have a after callback				
+					if (x.af && typeof window[x.af] === 'function') {
+						window[x.af]();
 					} else {
-						if (options.callback && window[options.callback] === 'function')
-							window[options.callback]();
+						if (options.after && window[options.after] === 'function')
+							window[options.after]();
 					}
 					// loop and do next animation
 					loopQueue(queue, ++counter);
-				});
+				}
 			}, x.d ? x.d : options.delay); // pass through delay
 		}
 	}
