@@ -24,8 +24,9 @@
 		loop: false
 	}
 	
-	// simple regex for commas for multple animations etc.
-	var commaCheck = new RegExp(",");
+	// simple regex for commas for multple parameters etc.
+	// not finished.. work in progress
+	//var commaCheck = new RegExp(",");
 		
 	/**
 	 * Initialise cssAnimationQueue
@@ -153,9 +154,10 @@
 				var sequence 	= elements[e].data('sequence');
 				var before 		= elements[e].data('before');
 				var after 		= elements[e].data('after');
-				var dont_queue  = elements[e].data('dont-queue');
+				var dont_queue  = elements[e].data('dont-queue');								
 				// counter check
-				if (!dont_queue) {
+				if (!dont_queue) {					
+					// update order / sequence
 					if (sequence) {
 						counter = sequence;
 					} else {
