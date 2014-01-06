@@ -80,14 +80,16 @@ Initalisation with custom settings
 	- if you don't set a specific animation on your element you can make it so it defaults to a global one
 * delay (*Default: 0*)
 	- You can set a global delay for each element
-* animationEnd (*Default: false*)
-	- Not used yet, but the intention is to make it so you can override the animation end setting to allow multiple animations at once.
+* allAtOnce (*Default: false*)
+	- Setting this var to true will attempt to apply all animations at once. If set to false it loop through each animation at a time, when it has completed.
 * before (*Default: false*)
 	- You can pass through a string name of a custom function. It will be fired each time of every animation though. So its better to set a specific one on an element
 * after (*Default: false*)
 	- You can pass through a string name of a custom function. It will be fired each time of every animation though. So its better to set a specific one on an element
 * loop (*Default: false*)
+	- *not finished yet*
 	- Setting this to true will loop the animation queue
+	- Currently not enalbed for allAtOnce.
 
 
 ### Compatibility

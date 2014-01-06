@@ -18,7 +18,7 @@
 		dataAttr: 'ani',
 		animation: 'fadeInUp',				
 		delay: 0,
-		animationEnd: false, // boolean not added yet
+		allAtOnce: false, // boolean to play all animations in one go or not.
 		before: false, // if you want to use a callback it will be used on each animation, better to specify animation with an attribute.
 		after: false, // if you want to use a callback it will be used on each animation, better to specify animation with an attribute.
 		loop: false
@@ -118,8 +118,11 @@
 		 if (options.hidden) {
 			 var elements = document.find('.'+options.selector);
 			 for (var e in elements) {
-			 	if (typeof elements[e] == 'object') {				 	
+			 	if (typeof elements[e] == 'object') {
+			 		// check if elements wants to be hidden!		 	
 			 		var dont_hide = elements[e].data('dont-hide');
+			 		// reset class to selector only
+			 		elements[e].className = options.selector;
 				 	if (options.hidden && !dont_hide) {
 					 	if (options.hidden == 'class')
 					 		elements[e].classList.add(options.hiddenClass);
@@ -163,7 +166,8 @@
 						a:  animation, 
 						af: after,
 						b:  before,
-						d:  delay, 
+						d:  delay,
+						dt: dont_queue,
 						e:  elements[e]
 					};				
 				}
@@ -177,51 +181,69 @@
 	}
 	
 	/**
+	 * Wrapper for firing callbacks
+	 */
+	function callback (action, defaultAction) {
+		if (action && typeof window[action] === 'function') {
+			window[action]();
+		} else {
+			if (defaultAction && options[defaultAction] && window[options.defaultAction] === 'function')
+				window[options.defaultAction]();
+		}		
+	}
+	
+	/**
 	 * Recursive Loop Timeout function for queue
 	 */
 	 function loopQueue (queue, counter) {	
 	 	// shorthand for element
 	 	var x = queue[counter];
-	 	if (typeof x == 'object') {
-		 	// create timeout and loop
-			setTimeout(function () {
-				// requestAnimFrame for better performance
-				requestAnimFrame(loopQueue);				
-				// check if we have a before callback				
-				if (x.b && typeof window[x.b] === 'function') {
-					window[x.b]();
-				} else {
-					if (options.b && window[options.b] === 'function')
-						window[options.b]();
-				}		
-				// add class to element
-				x.e.classList.add(x.a ? x.a : options.animationIn);	
-				// do rest when animation has ended check if animationEnd set
-				if (!options.animationEnd) {
-					x.e.on(['webkitAnimationEnd', 'oanimationend', 'msAnimationEnd', 'animationend'], function () {
+	 	// internal private for for length of queue
+		var queueLength = parseInt(queue.length - 1);	 
+	 	// check if we are doing allAtOnce
+	 	if (!options.allAtOnce) {
+		 	if (typeof x == 'object') {
+			 	// create timeout and loop
+				setTimeout(function () {
+					// requestAnimFrame for better performance
+					requestAnimFrame(loopQueue);				
+					// check if we have a before callback				
+					callback(x.b, 'before');
+					// add class to element
+					x.e.classList.add(x.a ? x.a : options.animation);	
+					// do rest when animation has ended check if animationEnd set		
+					animationEnd(x.e, function () {
 						// check if we have a after callback				
-						if (x.af && typeof window[x.af] === 'function') {
-							window[x.af]();
-						} else {
-							if (options.after && window[options.after] === 'function')
-								window[options.after]();
-						}
-						// loop and do next animation
+						callback(x.af, 'after');
+						// check if we are looping
+						// not finished
+					 	if (options.loop && counter == queueLength) {
+					 		// hide elements again
+					 		//hideElements();
+					 		// reset counter
+					 		//counter = 0;
+					 		//console.log(counter, queueLength);					 		
+					 	}
 						loopQueue(queue, ++counter);
 					});
-				} else {
-					// check if we have a after callback				
-					if (x.af && typeof window[x.af] === 'function') {
-						window[x.af]();
-					} else {
-						if (options.after && window[options.after] === 'function')
-							window[options.after]();
+				}, x.d ? x.d : options.delay); // pass through delay
+			}
+		// this is where we are doing all animations at once..
+		} else {			
+			// check if there is multple animations
+			if (queueLength > 1) {
+				// loop and apply all animations asap.					
+				for (var q in queue) {
+					if (typeof queue[q] == 'object') {
+						// perform animation and callbcks
+						callback(queue[q].b, 'before');
+						queue[q].e.classList.add(queue[q].a ? queue[q].a : options.animation);
+						callback(queue[q].af, 'after');		
+						// if all at once looping not permitted, page freaks out. best to set loop in the css declaration maybe?
 					}
-					// loop and do next animation
-					loopQueue(queue, ++counter);
 				}
-			}, x.d ? x.d : options.delay); // pass through delay
-		}
+			}
+		}		
 	}
 
 	/**
@@ -232,6 +254,17 @@
 			window.setTimeout(callback, 1000 / 60);
 		};
 	})();
+	
+	/**
+	 * Wrapper for animationEnd Event
+	 */
+	function animationEnd (element, call) {
+		if (element && call) {
+			element.on(['webkitAnimationEnd', 'oanimationend', 'msAnimationEnd', 'animationend'], function () {
+				call();
+			});
+		}
+	}
 	
 	/**
 	 * Global Var for returning public methods for animationQueue
